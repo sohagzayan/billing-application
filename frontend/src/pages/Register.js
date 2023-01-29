@@ -16,9 +16,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -71,7 +70,7 @@ const Login = () => {
                 info
               </Typography>
               <Button
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
                 sx={{
                   color: "#fff",
                   border: "1px solid #fff",
@@ -85,7 +84,7 @@ const Login = () => {
                   },
                 }}
               >
-                Register
+                Login
               </Button>
             </Box>
           </Grid>
@@ -125,6 +124,17 @@ const Login = () => {
               </Typography>
               <FormSignUp>
                 <TextField
+                  type="text"
+                  sx={{
+                    width: "100%",
+                    fontFamily: "Poppins",
+                    marginBottom: "8px",
+                  }}
+                  id="standard-basic"
+                  label="Name"
+                  variant="standard"
+                />
+                <TextField
                   type="email"
                   sx={{
                     width: "100%",
@@ -157,7 +167,25 @@ const Login = () => {
                     }
                   />
                 </FormControl>
-
+                <FormControl sx={{ width: "100%" }} variant="standard">
+                  <InputLabel htmlFor="standard-adornment-password">
+                    Conform Password
+                  </InputLabel>
+                  <Input
+                    id="standard-adornment-password"
+                    type={showPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
                 <Button
                   type="submit"
                   sx={{
@@ -175,7 +203,7 @@ const Login = () => {
                     },
                   }}
                 >
-                  Login
+                  Sign up
                 </Button>
               </FormSignUp>
             </Box>
@@ -186,4 +214,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
