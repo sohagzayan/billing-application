@@ -1,10 +1,12 @@
 import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Billing from "./pages/Billing";
 
 function App() {
   return (
-    <div>
-      <p>hello world</p>
-    </div>
+    <Routes>
+      <Route path="/" element={<Billing />} />
+    </Routes>
   );
 }
 
