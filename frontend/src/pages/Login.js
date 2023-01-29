@@ -11,24 +11,47 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { clearAuthError, login } from "../store/reducerSlice/authSlice";
+import { useAlert } from "react-alert";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const [showPassword, setShowPassword] = React.useState(false);
-
+  const dispatch = useDispatch();
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const { loading, isAuthenticated, user, error } = useSelector(
+    (state) => state.user
+  );
+  const alert = useAlert();
 
-  const FormSignUp = styled("form")(({ theme }) => ({
+  const LoginWrapper = styled(Box)(({ theme }) => ({
     width: "50%",
     [theme.breakpoints.down("md")]: {
       width: "80%",
     },
   }));
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    dispatch(login(loginEmail, loginPassword));
+  };
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearAuthError());
+    }
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate, error, alert, dispatch]);
 
   return (
     <Box>
@@ -123,15 +146,20 @@ const Login = () => {
               >
                 use your email for registration
               </Typography>
-              <FormSignUp>
+              <Box
+                sx={{
+                  width: { md: "50%", xs: "80%" },
+                }}
+              >
                 <TextField
                   type="email"
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  value={loginEmail}
                   sx={{
                     width: "100%",
                     fontFamily: "Poppins",
                     marginBottom: "8px",
                   }}
-                  id="standard-basic"
                   label="Email"
                   variant="standard"
                 />
@@ -143,6 +171,8 @@ const Login = () => {
                     Password
                   </InputLabel>
                   <Input
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    value={loginPassword}
                     id="standard-adornment-password"
                     type={showPassword ? "text" : "password"}
                     endAdornment={
@@ -159,7 +189,7 @@ const Login = () => {
                 </FormControl>
 
                 <Button
-                  type="submit"
+                  onClick={handleLogin}
                   sx={{
                     backgroundColor: "#3BB795",
                     color: "#fff",
@@ -177,7 +207,7 @@ const Login = () => {
                 >
                   Login
                 </Button>
-              </FormSignUp>
+              </Box>
             </Box>
           </Grid>
         </Grid>

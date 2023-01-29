@@ -11,16 +11,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuthError, register } from "../store/reducerSlice/authSlice";
+import { useAlert } from "react-alert";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = React.useState(false);
-
+  const dispatch = useDispatch();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const { loading, isAuthenticated, user, error } = useSelector(
+    (state) => state.user
+  );
+  const alert = useAlert();
 
   const FormSignUp = styled("form")(({ theme }) => ({
     width: "50%",
@@ -28,6 +39,27 @@ const Register = () => {
       width: "80%",
     },
   }));
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const userData = {
+      name,
+      email,
+      password,
+      confirmPassword,
+    };
+    dispatch(register(userData));
+  };
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearAuthError());
+    }
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [dispatch, isAuthenticated, navigate, alert, error]);
 
   return (
     <Box>
@@ -122,8 +154,14 @@ const Register = () => {
               >
                 use your email for registration
               </Typography>
-              <FormSignUp>
+              <Box
+                sx={{
+                  width: { md: "50%", xs: "80%" },
+                }}
+              >
                 <TextField
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                   type="text"
                   sx={{
                     width: "100%",
@@ -135,6 +173,8 @@ const Register = () => {
                   variant="standard"
                 />
                 <TextField
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   type="email"
                   sx={{
                     width: "100%",
@@ -153,6 +193,8 @@ const Register = () => {
                     Password
                   </InputLabel>
                   <Input
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
                     id="standard-adornment-password"
                     type={showPassword ? "text" : "password"}
                     endAdornment={
@@ -172,6 +214,8 @@ const Register = () => {
                     Conform Password
                   </InputLabel>
                   <Input
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={confirmPassword}
                     id="standard-adornment-password"
                     type={showPassword ? "text" : "password"}
                     endAdornment={
@@ -187,7 +231,7 @@ const Register = () => {
                   />
                 </FormControl>
                 <Button
-                  type="submit"
+                  onClick={handleRegister}
                   sx={{
                     backgroundColor: "#3BB795",
                     color: "#fff",
@@ -205,7 +249,7 @@ const Register = () => {
                 >
                   Sign up
                 </Button>
-              </FormSignUp>
+              </Box>
             </Box>
           </Grid>
         </Grid>

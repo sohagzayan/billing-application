@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import BillingAction from "./BillingAction";
 import { grey } from "@mui/material/colors";
 
-const BillingTable = () => {
+const BillingTable = ({ setEditId, editId, setOpen }) => {
   const [rowId, setRowId] = useState(null);
   const users = [
     {
@@ -82,12 +82,14 @@ const BillingTable = () => {
         headerName: "Actions",
         type: "actions",
         renderCell: (params) => (
-          <BillingAction {...{ params, rowId, setRowId }} />
+          <BillingAction
+            {...{ params, rowId, setRowId, setEditId, editId, setOpen }}
+          />
         ),
         width: "200",
       },
     ],
-    [rowId]
+    [rowId, editId, setEditId, setOpen]
   );
   return (
     <Box

@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Input, Typography } from "@mui/material";
 import React from "react";
 
-const BillingTopHeader = () => {
+const BillingTopHeader = ({ open, setOpen }) => {
   return (
     <Box>
       <Box
@@ -44,6 +44,7 @@ const BillingTopHeader = () => {
         </Box>
         <Box>
           <Button
+            onClick={() => setOpen(true)}
             sx={{
               padding: "6px 15px",
               fontSize: "15px",

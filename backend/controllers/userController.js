@@ -11,14 +11,22 @@ const sendEmail = require("../utils/sendEmail");
 exports.registerUser = tryCatch(async (req, res, next) => {
   const userData = req.body;
   const { name, email, password } = userData;
+  /* needed confirm Password ⩢  */
+  if (!req.body.confirmPassword) {
+    return next(new ErrorHandler(" required confirmPassword field", 400));
+  }
+  /* match password and conform password ⩢  */
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new ErrorHandler("Password does not match", 400));
+  }
   /* make a hash password ⩢  */
   const hashPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({
+  const userInfo = await User.create({
     name,
     email,
     password: hashPassword,
   });
-
+  const user = await User.findOne({ _id: userInfo._id });
   /** Get jwt token and store token on cookie  ⩢  */
   sendJwtToken(user, 200, res);
 });
@@ -30,7 +38,7 @@ exports.loginUser = tryCatch(async (req, res, next) => {
     return next(new ErrorHandler("Please enter email and password"));
   }
   /** if user not finding on database ⩢  */
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate("billing");
   if (!user) {
     return next(new ErrorHandler("Invalid user email or password"));
   }
@@ -116,4 +124,14 @@ exports.resetPassword = tryCatch(async (req, res, next) => {
   user.resetPasswordExpires = undefined;
   await user.save();
   sendJwtToken(user, 200, res);
+});
+
+/** Get User Details */
+exports.getUserDetails = tryCatch(async (req, res, next) => {
+  const user = await User.findById(req.user._id).populate("billing");
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
 });
