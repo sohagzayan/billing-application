@@ -15,8 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 /* Route import */
 const user = require("./routes/userRoute");
+const billing = require("./routes/billingRoute");
 
 app.use("/api", user);
+app.use("/api", billing);
 
 // middleware  error handler
 app.use(errorHandlerGard);

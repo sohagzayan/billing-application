@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please enter your password"],
     minlength: [8, "Password cannot have more then 8 character"],
   },
+  billing: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Billing",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
