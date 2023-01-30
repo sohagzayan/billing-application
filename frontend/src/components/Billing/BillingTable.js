@@ -1,14 +1,7 @@
-import React, {
-  Fragment,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import BillingAction from "./BillingAction";
-import { grey } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader/Loader";
 import { getAllBilling } from "../../store/reducerSlice/billingSlice";
@@ -27,8 +20,9 @@ const BillingTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 10;
   // const { loading, error, user } = useSelector((state) => state.user);
-  const { success, loading, error, billing, filteredProductsCount } =
-    useSelector((state) => state.billing);
+  const { loading, billing, filteredProductsCount } = useSelector(
+    (state) => state.billing
+  );
 
   const setCurrentPageNo = (e) => {
     setCurrentPage(e);
