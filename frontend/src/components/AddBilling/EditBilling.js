@@ -11,10 +11,12 @@ import {
   addNewBilling,
   clearBillingError,
   clearBillingSuccess,
+  updateBillingInfo,
 } from "../../store/reducerSlice/billingSlice";
 import { useAlert } from "react-alert";
 import { store } from "../../store/store";
 import { loadUser } from "../../store/reducerSlice/authSlice";
+import { getBillingDetails } from "../../store/reducerSlice/billingDetailsSlice";
 
 const style = {
   position: "absolute",
@@ -30,21 +32,22 @@ const style = {
   p: 3,
 };
 
-const AddBilling = ({ setOpen, open, editId }) => {
+const EditBilling = ({ setOpenEdit, openEdit, editId, setEditId }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [payableAmount, setPayableAmount] = useState("");
-  const { successNewBilling, loading, error } = useSelector(
-    (state) => state.billing
+  const { successUpdate } = useSelector((state) => state.billing);
+  const { loading, error, billing } = useSelector(
+    (state) => state.billingDetails
   );
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpenEdit(true);
+  const handleClose = () => setOpenEdit(false);
 
-  const handleAddBilling = async (e) => {
+  const handleUpdateBilling = async (e) => {
     e.preventDefault();
     const billingData = {
       fullName,
@@ -52,7 +55,7 @@ const AddBilling = ({ setOpen, open, editId }) => {
       phone,
       payableAmount,
     };
-    dispatch(addNewBilling(billingData));
+    dispatch(updateBillingInfo(editId, billingData));
     // store.dispatch(loadUser());
   };
 
@@ -61,16 +64,40 @@ const AddBilling = ({ setOpen, open, editId }) => {
       alert.error(error);
       dispatch(clearBillingError());
     }
-    if (successNewBilling) {
-      alert.success(successNewBilling);
+    if (successUpdate) {
+      alert.success(successUpdate);
       dispatch(clearBillingSuccess());
       setFullName("");
       setEmail("");
       setPhone("");
       setPayableAmount("");
-      setOpen(false);
+      setOpenEdit(false);
     }
-  }, [dispatch, successNewBilling, error, alert, setOpen]);
+    if (editId) {
+      dispatch(getBillingDetails(editId));
+    }
+    if (!openEdit) {
+      setEditId(null);
+    }
+  }, [
+    dispatch,
+    successUpdate,
+    error,
+    alert,
+    setOpenEdit,
+    editId,
+    setEditId,
+    openEdit,
+  ]);
+
+  useEffect(() => {
+    if (billing) {
+      setFullName(billing.fullName);
+      setEmail(billing.email);
+      setPhone(billing.phone);
+      setPayableAmount(billing.payableAmount);
+    }
+  }, [billing]);
 
   return (
     <div>
@@ -78,7 +105,7 @@ const AddBilling = ({ setOpen, open, editId }) => {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={openEdit}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -86,7 +113,7 @@ const AddBilling = ({ setOpen, open, editId }) => {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={openEdit}>
           <Box className="addNewBillingModal">
             <Typography
               sx={{
@@ -96,10 +123,10 @@ const AddBilling = ({ setOpen, open, editId }) => {
                 marginBottom: "30px",
               }}
             >
-              Add New Billing
+              Update Your Billing
             </Typography>
             <Box>
-              <form action="" onSubmit={handleAddBilling}>
+              <form action="" onSubmit={handleUpdateBilling}>
                 <TextField
                   onChange={(e) => setFullName(e.target.value)}
                   value={fullName}
@@ -158,7 +185,7 @@ const AddBilling = ({ setOpen, open, editId }) => {
                     },
                   }}
                 >
-                  Add Billing
+                  Update Billing
                 </Button>
               </form>
             </Box>
@@ -169,4 +196,4 @@ const AddBilling = ({ setOpen, open, editId }) => {
   );
 };
 
-export default AddBilling;
+export default EditBilling;

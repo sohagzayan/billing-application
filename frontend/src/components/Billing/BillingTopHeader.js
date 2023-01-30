@@ -1,7 +1,16 @@
 import { Box, Button, Grid, Input, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getAllBilling } from "../../store/reducerSlice/billingSlice";
 
 const BillingTopHeader = ({ open, setOpen }) => {
+  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllBilling(search));
+  }, [search, dispatch]);
+
   return (
     <Box>
       <Box
@@ -35,6 +44,7 @@ const BillingTopHeader = ({ open, setOpen }) => {
             Billings
           </Typography>
           <Input
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             sx={{
               fontFamily: "Poppins",

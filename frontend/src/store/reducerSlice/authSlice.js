@@ -72,7 +72,6 @@ export const register = (userData) => async (dispatch) => {
     const config = { headers: { "Content-Type": "application/json" } };
     const { data } = await axios.post("/api/register", userData, config);
     dispatch(requestUserSuccess(data.user));
-    console.log(data);
   } catch (error) {
     dispatch(requestUserFailure(error.response.data.message));
   }
@@ -95,7 +94,6 @@ export const logOut = () => async (dispatch) => {
     dispatch(requestUser());
     await axios.get("/api/logout");
     dispatch(requestUserLogOut(null));
-    // console.log(data);
   } catch (error) {
     dispatch(requestUserClearError(error.response.data.message));
   }

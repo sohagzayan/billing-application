@@ -17,7 +17,7 @@ const billingSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, "Please add your number"],
-    minlength: [11, "Number cannot have more then 11 character"],
+    minlength: [11, "Number can never be less then 11"],
     maxLength: [11, "Number cannot have more then 11 character"],
   },
   payableAmount: {

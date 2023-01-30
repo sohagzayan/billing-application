@@ -8,6 +8,7 @@ const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
   const dispatch = useDispatch();
   const { loading, isAuthenticated, user } = useSelector((state) => state.user);
+  const { totalPrice } = useSelector((state) => state.billing);
 
   const handleLogout = async () => {
     dispatch(logOut());
@@ -51,7 +52,9 @@ const Header = () => {
             sx={{ fontFamily: "Poppins", fontWeight: "400", fontSize: "16px" }}
           >
             Paid Total:{" "}
-            <span style={{ fontSize: "16px", fontWeight: "500" }}>৳4545</span>
+            <span style={{ fontSize: "16px", fontWeight: "500" }}>
+              ${totalPrice}
+            </span>
           </Typography>
           <Box sx={{ marginLeft: "50px" }}>
             <span

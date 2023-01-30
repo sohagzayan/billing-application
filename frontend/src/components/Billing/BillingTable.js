@@ -1,46 +1,49 @@
-import React, { useMemo, useState } from "react";
+import React, {
+  Fragment,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import BillingAction from "./BillingAction";
 import { grey } from "@mui/material/colors";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../Loader/Loader";
+import { getAllBilling } from "../../store/reducerSlice/billingSlice";
+import Pagination from "react-js-pagination";
 
-const BillingTable = ({ setEditId, editId, setOpen }) => {
+const BillingTable = ({
+  setEditId,
+  editId,
+  setOpen,
+  setOpenEdit,
+  openEdits,
+}) => {
+  const dispatch = useDispatch();
   const [rowId, setRowId] = useState(null);
-  const users = [
-    {
-      id: 1,
-      name: "sohag",
-      email: "ohga@gmail.com",
-      photoUrl: "url",
-      role: "admin",
-      phone: "01980796731",
-      paidAmount: 99,
-    },
-    {
-      id: 2,
-      name: "milon",
-      email: "milon@gmail.com",
-      photoUrl: "url",
-      role: "admin",
-      phone: "01980796731",
-      paidAmount: 99,
-    },
-    {
-      id: 3,
-      name: "milon",
-      email: "milon@gmail.com",
-      photoUrl: "url",
-      role: "admin",
-      phone: "01980796731",
-      paidAmount: 99,
-    },
-  ];
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultPerPage = 10;
+  // const { loading, error, user } = useSelector((state) => state.user);
+  const { success, loading, error, billing, filteredProductsCount } =
+    useSelector((state) => state.billing);
+
+  const setCurrentPageNo = (e) => {
+    setCurrentPage(e);
+  };
+  const search = "";
+
+  useEffect(() => {
+    dispatch(getAllBilling(search, currentPage));
+  }, [dispatch, currentPage]);
 
   const columns = useMemo(
     () => [
       {
         id: 1,
-        field: "id",
+        field: "_id",
         headerName: "Billing ID",
         width: 150,
         sortable: false,
@@ -49,9 +52,9 @@ const BillingTable = ({ setEditId, editId, setOpen }) => {
       },
       {
         id: 2,
-        field: "name",
+        field: "fullName",
         headerName: "Full Name",
-        width: 220,
+        width: 200,
       },
       {
         id: 3,
@@ -70,7 +73,7 @@ const BillingTable = ({ setEditId, editId, setOpen }) => {
       },
       {
         id: 5,
-        field: "paidAmount",
+        field: "payableAmount",
         headerName: "paid Amount",
         width: 150,
         editable: true,
@@ -83,39 +86,66 @@ const BillingTable = ({ setEditId, editId, setOpen }) => {
         type: "actions",
         renderCell: (params) => (
           <BillingAction
-            {...{ params, rowId, setRowId, setEditId, editId, setOpen }}
+            {...{ params, rowId, setRowId, setEditId, editId, setOpenEdit }}
           />
         ),
         width: "200",
       },
     ],
-    [rowId, editId, setEditId, setOpen]
+    [rowId, editId, setEditId, setOpenEdit]
   );
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "400px",
-      }}
-    >
-      <DataGrid
-        columns={columns}
-        rows={users}
-        getRowId={(row) => row.id}
-        getRowSpacing={(params) => ({
-          top: params.isFirstVisible ? 0 : 5,
-          bottom: params.isLastVisible ? 0 : 5,
-        })}
-        sx={{
-          [`& .${gridClasses.row}`]: {
-            bgcolor: "#fff",
-            borderBottom: "1px solid #DAE0F1",
-            fontFamily: "Poppins",
-          },
-        }}
-        onCellEditCommit={(params) => setRowId(params.id)}
-      />
-    </Box>
+    <Fragment>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Box
+          sx={{
+            width: "100%",
+            height: "500px",
+          }}
+        >
+          <DataGrid
+            columns={columns}
+            rows={billing}
+            pageSize={pageSize}
+            getRowId={(row) => row._id}
+            getRowSpacing={(params) => ({
+              top: params.isFirstVisible ? 0 : 5,
+              bottom: params.isLastVisible ? 0 : 5,
+            })}
+            sx={{
+              [`& .${gridClasses.row}`]: {
+                bgcolor: "#fff",
+                borderBottom: "1px solid #DAE0F1",
+                fontFamily: "Poppins",
+              },
+            }}
+            // onCellEditCommit={(params) => setRowId(params?._id)}
+          />
+          <Box>
+            {resultPerPage < filteredProductsCount && (
+              <div className="paginationBox">
+                <Pagination
+                  activePage={currentPage}
+                  itemsCountPerPage={10}
+                  totalItemsCount={20}
+                  onChange={setCurrentPageNo}
+                  nextPageText="Next"
+                  prevPageText="Prev"
+                  firstPageText="1st"
+                  lastPageText="Last"
+                  itemClass="page-item"
+                  linkClass="page-link"
+                  activeClass="pageItemActive"
+                  activeLinkClass="pageLinkActive"
+                />
+              </div>
+            )}
+          </Box>
+        </Box>
+      )}
+    </Fragment>
   );
 };
 
