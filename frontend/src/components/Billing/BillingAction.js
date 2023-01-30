@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearBillingSuccess,
   deleteBilling,
+  getAllBilling,
 } from "../../store/reducerSlice/billingSlice";
 import AddBilling from "../AddBilling/AddBilling";
 import { useAlert } from "react-alert";
@@ -26,6 +27,7 @@ const BillingAction = ({ rowId, params, setEditId, editId, setOpenEdit }) => {
           icon: "success",
         });
         dispatch(deleteBilling(id));
+        dispatch(getAllBilling());
       } else {
         swal("Your imaginary file is safe!");
       }

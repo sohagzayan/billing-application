@@ -37,14 +37,14 @@ const billingSlice = createSlice({
       state.loading = false;
       state.error = null;
       state.successUpdate = "Successfully Updated  billing info";
-      state.billing.push(action.payload);
+      // state.billing.push(action.payload);
     },
     successDeleteBilling(state, action) {
       state.loading = false;
       state.error = null;
       state.successDelete = "Successfully Delete  billing info";
-      state.billing = action.payload.billing;
-      state.filteredProductsCount = state.filteredProductsCount - 1;
+      state.billing = action.payload;
+      // state.filteredProductsCount = state.filteredProductsCount - 1;
     },
     failureAddNewBilling(state, action) {
       state.loading = false;
@@ -131,7 +131,7 @@ export const deleteBilling = (id) => async (dispatch, getState) => {
   try {
     dispatch(requestAddNewBilling());
     const { data } = await axios.delete(`/api/delete-billing/${id}`);
-    dispatch(successDeleteBilling({ billing: data.updatedBilling }));
+    dispatch(successDeleteBilling(data.updatedBilling));
   } catch (error) {
     dispatch(failureAddNewBilling(error.response.data.message));
   }

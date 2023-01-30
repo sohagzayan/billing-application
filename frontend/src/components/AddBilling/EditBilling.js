@@ -11,6 +11,8 @@ import {
   addNewBilling,
   clearBillingError,
   clearBillingSuccess,
+  getAllBilling,
+  requestAllBilling,
   updateBillingInfo,
 } from "../../store/reducerSlice/billingSlice";
 import { useAlert } from "react-alert";
@@ -56,6 +58,7 @@ const EditBilling = ({ setOpenEdit, openEdit, editId, setEditId }) => {
       payableAmount,
     };
     dispatch(updateBillingInfo(editId, billingData));
+    dispatch(getAllBilling());
     // store.dispatch(loadUser());
   };
 
