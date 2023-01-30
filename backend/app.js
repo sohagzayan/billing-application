@@ -5,6 +5,8 @@ const errorHandlerGard = require("./middleware/error");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
+const path = require("path");
+
 dotenv.config({ path: "backend/config/config.env" });
 
 /* user external middleware */
@@ -19,6 +21,12 @@ const billing = require("./routes/billingRoute");
 
 app.use("/api", user);
 app.use("/api", billing);
+
+// send build folder
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+});
 
 // middleware  error handler
 app.use(errorHandlerGard);
