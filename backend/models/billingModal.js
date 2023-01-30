@@ -24,6 +24,10 @@ const billingSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please add your payable amount"],
   },
+  orderId: {
+    type: String,
+    default: crypto.randomBytes(3).toString("hex"),
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

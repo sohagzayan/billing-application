@@ -136,7 +136,7 @@ const EditBilling = ({ setOpenEdit, openEdit, editId, setEditId }) => {
                   required
                   type="text"
                   sx={{ width: "100%", marginBottom: "15px" }}
-                  id="outlined-basic"
+                  id="name"
                   label="Full Name"
                   variant="outlined"
                 />
@@ -146,7 +146,7 @@ const EditBilling = ({ setOpenEdit, openEdit, editId, setEditId }) => {
                   required
                   type="email"
                   sx={{ width: "100%", marginBottom: "15px" }}
-                  id="outlined-basic"
+                  id="email"
                   label="Email"
                   variant="outlined"
                 />
@@ -156,7 +156,7 @@ const EditBilling = ({ setOpenEdit, openEdit, editId, setEditId }) => {
                   required
                   type="text"
                   sx={{ width: "100%", marginBottom: "15px" }}
-                  id="outlined-basic"
+                  id="phone"
                   label="Phone"
                   variant="outlined"
                 />
@@ -166,7 +166,7 @@ const EditBilling = ({ setOpenEdit, openEdit, editId, setEditId }) => {
                   required
                   type="text"
                   sx={{ width: "100%", marginBottom: "15px" }}
-                  id="outlined-basic"
+                  id="amount"
                   label="Payable Amount"
                   variant="outlined"
                 />

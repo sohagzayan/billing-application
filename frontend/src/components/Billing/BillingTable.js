@@ -43,8 +43,8 @@ const BillingTable = ({
     () => [
       {
         id: 1,
-        field: "_id",
-        headerName: "Billing ID",
+        field: "orderId",
+        headerName: "#Billing ID",
         width: 150,
         sortable: false,
         filterable: false,
